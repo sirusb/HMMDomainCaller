@@ -2,7 +2,9 @@
 title: "README"
 author: "Mohamed Nadhir Djekidel"
 date: "6/30/2020"
-output: html_document
+output:
+  md_document:
+    variant: markdown_github
 ---
 
 ## Load required libraries
@@ -128,7 +130,6 @@ for(bw in names(bw_file_paths)){
   atrack <- AnnotationTrack(H3K27me3_domains[[bw]], name = glue("{bw} domains"),chromosome = seqlevels(hoxc.gr))
   bw_tracks = c(bw_tracks, atrack)
 }
-
 
 plotTracks(bw_tracks, 
              chromosome=seqlevels(hoxc.gr),

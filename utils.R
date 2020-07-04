@@ -94,7 +94,7 @@ TrainHMMmodel <- function(bw_file,
   
   if(plot.model){
     
-    hist(scores, probability=TRUE, breaks=30, xlab="posterior mean", main="")
+    hist(scores, probability=TRUE, breaks=30, xlab="signal enrichment", ylab="Probability", ylim=c(0,1), main="")
     x = seq(min(scores),max(scores),0.01)
     lines(x, dnorm(x, mean=bw_fileModel$parms.emission$mu[1], sd=sqrt(bw_fileModel$parms.emission$sigma[1])),col="red",lwd=2);
     lines(x, dnorm(x, mean=bw_fileModel$parms.emission$mu[2], sd=sqrt(bw_fileModel$parms.emission$sigma[2])),col="green",lwd=2);
