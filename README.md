@@ -170,11 +170,10 @@ list.files("HMMDomains/",full.names = T)
     ## [2] "HMMDomains/H3K27me3_4C_mm10.sorted.Q10.dedup.sorted_5_domains.bed" 
     ## [3] "HMMDomains/H3K27me3_MII_mm10.sorted.Q10.dedup.sorted_5_domains.bed"
 
-Visualize the detected domai
-ns
+Visualize the detected domains
 ------------------------------
 
-Let’s display the Hoxc locus as example
+Let’s display the Hoxc locus as an example
 
 ``` r
 hoxc.gr = GRanges("chr15:100859671-104043685")
