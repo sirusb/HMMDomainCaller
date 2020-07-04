@@ -1,0 +1,145 @@
+---
+title: "README"
+author: "Mohamed Nadhir Djekidel"
+date: "6/30/2020"
+output: html_document
+---
+
+## Load required libraries
+
+
+```{r message=FALSE, warning=FALSE}
+require(mhsmm)
+require(BSgenome.Mmusculus.UCSC.mm10)
+require(rtracklayer)
+require(dplyr)
+require(glue)
+
+# for plotting genome browswer view (optional)
+require(Gviz)
+require(TxDb.Mmusculus.UCSC.mm10.knownGene) 
+require(org.Mm.eg.db)
+# just for colorful plotting
+require(crayon)
+```
+
+## Load the scripts
+
+```{r}
+source("utils.R")
+
+```
+
+## Define the list of bw files
+
+```{r}
+bw_file_paths = list(H2K27me3_MII = "bigWig_examples/H3K27me3_MII_mm10.sorted.Q10.dedup.sorted.bw",
+                H2K27me3_2C = "bigWig_examples/H3K27me3_2C_mm10.sorted.Q10.dedup.sorted.bw",
+                H2K27me3_4C = "bigWig_examples/H3K27me3_4C_mm10.sorted.Q10.dedup.sorted.bw"
+                )
+```
+
+
+## Load the mm10 blacklist regions (optional)
+
+```{r}
+mm10_blacklist = "mm10-blacklist.v2.bed"
+mm10_blacklist_gr = data.table::fread(mm10_blacklist)
+colnames(mm10_blacklist_gr) = c("seqnames","start","end","Type")
+mm10_blacklist_gr = GRanges(mm10_blacklist_gr)
+mm10_blacklist_gr = subset(mm10_blacklist_gr, Type == "High Signal Region")
+
+head(mm10_blacklist_gr)
+```
+
+
+## Call Domains
+
+```{r}
+H3K27me3_domains <- list()
+
+for(bw in names(bw_file_paths)){
+  bw_file= bw_file_paths[[bw]]
+  H3K27me3_domains[[bw]] = CallDomains(bw_file = bw_file,
+                                       winsize = 5000,
+                                       stepsize = 5000,
+                                       training.chrom = glue("chr{1:4}"),
+                                       chromsToUse = glue("chr{1:19}"),
+                                       genome = 'mm10',
+                                       smooth = FALSE,
+                                       mm10_blacklist_gr = mm10_blacklist_gr,
+                                       saveProbs = FALSE,
+                                       plot.model = TRUE,
+                                       outDir = "HMMDomains"
+                                       )
+}
+```
+
+
+## Check the output folder
+
+```{r}
+list.files("HMMDomains/",full.names = T)
+```
+
+
+
+## Visualize the detected domains
+
+Let's display the Hoxc locus as example
+
+```{r fig.height=6, fig.width=15}
+hoxc.gr = GRanges("chr15:100859671-104043685")
+
+
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+
+TxByGns <- genes(txdb)
+TxByGns = subset(TxByGns, seqnames == seqlevels(hoxc.gr))
+
+TxByGns$gene_name <- mapIds(org.Mm.eg.db,
+                            keys = as.character(TxByGns$gene_id),
+                            column = "SYMBOL",
+                            keytype = "ENTREZID",
+                            multiVals = "first")
+
+
+
+TxDbTrack <- GeneRegionTrack(TxByGns,chromosome=seqlevels(hoxc.gr),gene = TxByGns$gene_name) 
+
+#idio_track <- IdeogramTrack(genome = "mm10", chromosome = seqnames(hoxc.gr)[1])
+gtrack <- GenomeAxisTrack()
+
+bw_tracks <- c(gtrack, TxDbTrack)
+
+bw_range = BigWigSelection(ranges = hoxc.gr)
+
+seqlen = seqlengths(BSgenome.Mmusculus.UCSC.mm10)[seqlevels(hoxc.gr)]
+region <- GRanges(seqlevels(hoxc.gr), IRanges(1,seqlen))
+
+for(bw in names(bw_file_paths)){
+  
+  bw_file= bw_file_paths[[bw]]
+  coverage <- import.bw(bw_file,which=region)#,selection  = bw_range) 
+  dt <- DataTrack(coverage,chomosome=seqlevels(hoxc.gr),name = glue("{bw} signal")) 
+  bw_tracks = c(bw_tracks, dt)
+  #domains_inregion = subsetByOverlaps(H3K27me3_domains[[bw]], hoxc.gr)
+  
+  atrack <- AnnotationTrack(H3K27me3_domains[[bw]], name = glue("{bw} domains"),chromosome = seqlevels(hoxc.gr))
+  bw_tracks = c(bw_tracks, atrack)
+}
+
+
+plotTracks(bw_tracks, 
+             chromosome=seqlevels(hoxc.gr),
+             from = start(hoxc.gr),
+             to = end(hoxc.gr),
+             type="h",
+           transcriptAnnotation="gene") 
+```
+
+
+
+
+
+
