@@ -1,4 +1,4 @@
 ## HMM Domain caller
 
-Please check the `.Rmd` file for details.
+Please check the `README.Rmd` file for details.
 
