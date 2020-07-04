@@ -98,8 +98,10 @@ for(bw in names(bw_file_paths)){
     ## [1] 9.991023 1.578732
     ## 
     ## defining model
-    ## Fitting model
 
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+    ## Fitting model
     ## *) Detecting domains:
     ## Generating bed file
     ##  ====================
@@ -111,9 +113,6 @@ for(bw in names(bw_file_paths)){
     ## Estimating the initial distribution P0
 
     ## Initialization parameters
-
-![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
-
     ## $P0
     ## [1] 0.2079394 0.7920606
     ## 
@@ -124,8 +123,10 @@ for(bw in names(bw_file_paths)){
     ## [1] 4.590620 1.643701
     ## 
     ## defining model
-    ## Fitting model
 
+![](README_files/figure-markdown_github/unnamed-chunk-5-2.png)
+
+    ## Fitting model
     ## *) Detecting domains:
     ## Generating bed file
     ##  ====================
@@ -138,7 +139,6 @@ for(bw in names(bw_file_paths)){
 
     ## Initialization parameters
 
-![](README_files/figure-markdown_github/unnamed-chunk-5-2.png)
 
     ## $P0
     ## [1] 0.3265698 0.6734302
@@ -150,10 +150,10 @@ for(bw in names(bw_file_paths)){
     ## [1] 2.880374 1.499496
     ## 
     ## defining model
-    ## Fitting model
 
 ![](README_files/figure-markdown_github/unnamed-chunk-5-3.png)
 
+    ## Fitting model
     ## *) Detecting domains:
     ## Generating bed file
     ##  ====================
@@ -177,8 +177,9 @@ Let’s display the Hoxc locus as an example
 
 ``` r
 hoxc.gr = GRanges("chr15:100859671-104043685")
+```
 
-
+``` r
 txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 
 TxByGns <- genes(txdb)
