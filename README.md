@@ -195,7 +195,6 @@ TxDbTrack <- GeneRegionTrack(TxByGns,chromosome=seqlevels(hoxc.gr),gene = TxByGn
 
 gtrack <- GenomeAxisTrack()
 bw_tracks <- c(gtrack, TxDbTrack)
-bw_range = BigWigSelection(ranges = hoxc.gr)
 
 seqlen = seqlengths(BSgenome.Mmusculus.UCSC.mm10)[seqlevels(hoxc.gr)]
 region <- GRanges(seqlevels(hoxc.gr), IRanges(1,seqlen))
