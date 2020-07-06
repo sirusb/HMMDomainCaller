@@ -349,15 +349,6 @@ smoothSignal <- function(signal, window=3){
 }
 
 
-#' @param bw_file Path to the input bigWig file
-#' @param seqlen The genomic sizes (in bp) of the training chromosomes
-#' @param winsize The bin size to use (in bp). Default: 5000.
-#' @param stepsize The step size to use. Each time the window is slided by this value. Default: 5000.
-#' @param plot.model Whether to plot the learned model or not. Default: FALSE.
-#' @param blacklist A \linkS4class{GRanges} object containing the coordinates of the blacklist regions to exclude. Default: NULL
-#' @param smooth Do you want to smooth the signal first then estimate paramters? Generally useful when the signal is sparse. Default: FALSE.
-#' @param w The number of bins used to smooth the signal. Default: 3. Ignored if smooth = FALSE.
-
 
 #' Main function used to estimate the HMM model parameters and call domains.
 #'
